@@ -2,46 +2,62 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>モルック得点計算サイト</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>モルック得点計算</title>
   <style>
     body {
       font-family: sans-serif;
       text-align: center;
-      padding: 30px;
+      padding: 20px;
       padding-bottom: 80px;
+      margin: 0;
+      background-color: #f0f0f0;
     }
     input[type="text"] {
-      width: 200px;
-      padding: 5px;
+      width: 90%;
+      padding: 10px;
       margin-bottom: 10px;
+      font-size: 16px;
+      box-sizing: border-box;
     }
     .player-box {
       border: 2px solid #333;
       padding: 20px;
       border-radius: 10px;
-      background-color: #f9f9f9;
+      background-color: #fff;
       max-width: 400px;
+      width: 100%;
       margin: 0 auto;
     }
     .score-box {
       border: 3px solid #333;
-      padding: 15px;
-      font-size: 1.5em;
-      margin: 10px 0;
-      background-color: #f0f0f0;
+      padding: 10px;
+      font-size: 1.2em;
+      margin: 15px 0;
+      background-color: #e0e0e0;
       border-radius: 10px;
       font-weight: bold;
     }
     button {
-      margin: 5px;
-      padding: 6px 12px;
+      margin: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
     }
     .disqualified {
       color: red;
       font-weight: bold;
     }
     footer {
-      position: absolute;
+      position: fixed;
       bottom: 10px;
       width: 100%;
       text-align: center;
@@ -55,17 +71,17 @@
   <h1>モルックサークル「möln」<br>得点計算サイト</h1>
 
   <div class="player-box">
-    <input type="text" id="name" value="プレイヤー1" onchange="updateName()"><br>
+    <input type="text" id="name" value="プレイヤー1" onchange="updateName()" placeholder="名前を入力"><br>
     <div class="score-box" id="score">0 点</div>
     <p id="status"></p>
     <input type="text" id="input" placeholder="半角数字で入力"><br>
     <button onclick="addScore()" id="addBtn">得点追加</button>
-    <p>ターン数: <span id="player-turn">0</span></p>
+    <p>個人ターン数：<span id="player-turn">0</span></p>
   </div>
 
   <button onclick="resetGame()">ゲームリセット</button>
 
-  
+  <footer>©︎モルックサークル「möln」</footer>
 
   <script>
     let player = {
@@ -104,7 +120,7 @@
         player.zeroCount++;
         if (player.zeroCount >= 3) {
           player.disqualified = true;
-          document.getElementById("status").textContent = "失格（0点3回）";
+          document.getElementById("status").textContent = "あなたのチームは失格です。";
           document.getElementById("status").className = "disqualified";
           document.getElementById("addBtn").disabled = true;
           return;
