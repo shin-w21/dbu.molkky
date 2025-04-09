@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>モルック得点計算</title>
+  <title>モルックサークル「möln」</title>
   <style>
     body {
       font-family: sans-serif;
@@ -28,6 +28,7 @@
       max-width: 400px;
       width: 100%;
       margin: 0 auto;
+      box-sizing: border-box;
     }
     .score-box {
       border: 3px solid #333;
@@ -68,7 +69,7 @@
 </head>
 <body>
 
-  <h1>モルックサークル「möln」<br>得点計算サイト</h1>
+  <h1>モルック得点計算</h1>
 
   <div class="player-box">
     <input type="text" id="name" value="プレイヤー1" onchange="updateName()" placeholder="名前を入力"><br>
@@ -76,12 +77,12 @@
     <p id="status"></p>
     <input type="text" id="input" placeholder="半角数字で入力"><br>
     <button onclick="addScore()" id="addBtn">得点追加</button>
-    <p>個人ターン数：<span id="player-turn">0</span></p>
+    <p>個人ターン数: <span id="player-turn">0</span></p>
   </div>
 
   <button onclick="resetGame()">ゲームリセット</button>
 
-  <footer>©︎モルックサークル「möln」</footer>
+  <footer>©モルックサークル「möln」</footer>
 
   <script>
     let player = {
