@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>モルックサークル「möln」</title>
+  <title>モルック得点計算（1人用）</title>
   <style>
     body {
       font-family: sans-serif;
@@ -13,7 +13,7 @@
       margin: 0;
       background-color: #f0f0f0;
     }
-    input[type="text"] {
+    input[type="text"], input[type="number"] {
       width: 90%;
       padding: 10px;
       margin-bottom: 10px;
@@ -33,11 +33,14 @@
     .score-box {
       border: 3px solid #333;
       padding: 10px;
-      font-size: 1.2em;
+      font-size: 1.5em;
       margin: 15px 0;
       background-color: #e0e0e0;
       border-radius: 10px;
       font-weight: bold;
+    }
+    .score-red {
+      color: red;
     }
     button {
       margin: 10px;
@@ -57,6 +60,10 @@
       color: red;
       font-weight: bold;
     }
+    .winner {
+      color: green;
+      font-weight: bold;
+    }
     footer {
       position: fixed;
       bottom: 10px;
@@ -69,20 +76,20 @@
 </head>
 <body>
 
-  <h1>モルック得点計算</h1>
+  <h1>モルック得点計算（1人用）</h1>
 
   <div class="player-box">
-    <input type="text" id="name" onchange="updateName()" placeholder="名前（チーム名）を入力"><br>
+    <input type="text" id="name" value="プレイヤー1" onchange="updateName()" placeholder="名前を入力"><br>
     <div class="score-box" id="score">0 点</div>
     <p id="status"></p>
-    <input type="number" id="input" placeholder="半角数字で入力"><br>
+    <input type="number" id="input" placeholder="倒したピン数を入力（例: 1）"><br>
     <button onclick="addScore()" id="addBtn">得点追加</button>
-    <p>個人ターン数：<span id="player-turn">0</span></p>
+    <p>個人ターン数: <span id="player-turn">0</span></p>
   </div>
 
-  <button onclick="resetGame()">ゲームリセット</button>
+  <button onclick="resetGame()">リセット</button>
 
-  <footer>モルックサークル「möln」　</footer>
+  <footer>©︎モルックサークル「möln」</footer>
 
   <script>
     let player = {
@@ -103,16 +110,16 @@
         return;
       }
 
-      const input = document.getElementById("input").value;
-      const pins = input.split(',').map(x => parseInt(x.trim())).filter(n => !isNaN(n));
+      const inputVal = document.getElementById("input").value.trim();
+      const scoreInput = parseInt(inputVal, 10);
       document.getElementById("input").value = "";
 
-      if (pins.length === 0) {
-        alert("ピンを正しく入力してください。");
+      if (isNaN(scoreInput) || scoreInput < 0) {
+        alert("正しい数字を入力してください。");
         return;
       }
 
-      let addedScore = pins.length === 1 ? pins[0] : pins.length;
+      let addedScore = scoreInput;
 
       player.turn++;
       document.getElementById("player-turn").textContent = player.turn;
@@ -120,19 +127,29 @@
       if (addedScore === 0) {
         player.zeroCount++;
         if (player.zeroCount >= 3) {
-         player.disqualified = true;
-         document.getElementById("status").textContent = "失格（0点3回）";
-         document.getElementById("status").className = "disqualified";
-         document.getElementById("addBtn").disabled = true;
-         return;
-       } else {
-         document.getElementById("status").textContent = `0点連続 ${player.zeroCount} 回です`;
-         document.getElementById("status").className = "";
-       }
+          player.disqualified = true;
+          document.getElementById("status").textContent = "失格（0点3回）";
+          document.getElementById("status").className = "disqualified";
+          document.getElementById("addBtn").disabled = true;
+        } else {
+          document.getElementById("status").textContent = `0点連続 ${player.zeroCount} 回です`;
+          document.getElementById("status").className = "";
+        }
       } else {
         player.zeroCount = 0;
         player.score += addedScore;
-        if (player.score > 50) player.score = 25;
+
+        if (player.score > 50) {
+          player.score = 25;
+        } else if (player.score === 50) {
+          document.getElementById("status").textContent = "あなたの勝ちです！";
+          document.getElementById("status").className = "winner";
+          document.getElementById("addBtn").disabled = true;
+          document.getElementById("score").classList.add("score-red");
+        } else {
+          document.getElementById("status").textContent = "";
+          document.getElementById("status").className = "";
+        }
       }
 
       document.getElementById("score").textContent = `${player.score} 点`;
@@ -150,6 +167,7 @@
       document.getElementById("status").className = "";
       document.getElementById("input").value = "";
       document.getElementById("addBtn").disabled = false;
+      document.getElementById("score").classList.remove("score-red");
     }
   </script>
 
