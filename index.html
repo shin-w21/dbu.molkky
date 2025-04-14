@@ -79,11 +79,12 @@
   <h1>モルック得点計算</h1>
 
   <div class="player-box">
-    <input type="text" id="name" value="プレイヤー1" onchange="updateName()" placeholder="プレイヤー（チーム）名を入力"><br>
+    <input type="text" id="name" value="プレイヤー1" onchange="updateName()" placeholder="プレイヤー(チーム)名を入力"><br>
     <div class="score-box" id="score">0 点</div>
     <p id="status"></p>
     <input type="number" id="input" placeholder="半角数字を入力してください"><br>
     <button onclick="addScore()" id="addBtn">得点追加</button>
+    <button onclick="undoScore()">戻る</button>
     <p>個人ターン数: <span id="player-turn">0</span></p>
   </div>
 
@@ -93,11 +94,14 @@
 
   <script>
     let player = {
+      name: "プレイヤー1",
       score: 0,
       turn: 0,
       zeroCount: 0,
       disqualified: false
     };
+
+    let scoreHistory = []; // 得点履歴を保存
 
     function updateName() {
       player.name = document.getElementById("name").value;
@@ -119,6 +123,9 @@
       }
 
       let addedScore = scoreInput;
+
+      // 得点を履歴に保存
+      scoreHistory.push(player.score);
 
       player.turn++;
       document.getElementById("player-turn").textContent = player.turn;
@@ -160,11 +167,26 @@
       document.getElementById("score").textContent = `${player.score} 点`;
     }
 
+    function undoScore() {
+      // 履歴が空でなければ前の得点に戻す
+      if (scoreHistory.length > 0) {
+        player.score = scoreHistory.pop(); // 最後の得点を取り出して元に戻す
+        player.turn--; // ターン数を1回戻す
+        document.getElementById("player-turn").textContent = player.turn;
+        document.getElementById("score").textContent = `${player.score} 点`;
+
+        // 状態をリセット（得点が50点を超えた場合の表示もリセット）
+        document.getElementById("status").textContent = "";
+        document.getElementById("status").className = "";
+      }
+    }
+
     function resetGame() {
       player.score = 0;
       player.turn = 0;
       player.zeroCount = 0;
       player.disqualified = false;
+      scoreHistory = []; // 履歴をリセット
 
       document.getElementById("score").textContent = "0 点";
       document.getElementById("player-turn").textContent = "0";
