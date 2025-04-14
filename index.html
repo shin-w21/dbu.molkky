@@ -75,7 +75,7 @@
     <input type="text" id="name" onchange="updateName()" placeholder="名前（チーム名）を入力"><br>
     <div class="score-box" id="score">0 点</div>
     <p id="status"></p>
-    <input type="text" id="input" placeholder="半角数字で入力"><br>
+    <input type="number" id="input" placeholder="半角数字で入力"><br>
     <button onclick="addScore()" id="addBtn">得点追加</button>
     <p>個人ターン数：<span id="player-turn">0</span></p>
   </div>
@@ -120,12 +120,15 @@
       if (addedScore === 0) {
         player.zeroCount++;
         if (player.zeroCount >= 3) {
-          player.disqualified = true;
-          document.getElementById("status").textContent = "あなたのチームは失格です。";
-          document.getElementById("status").className = "disqualified";
-          document.getElementById("addBtn").disabled = true;
-          return;
-        }
+         player.disqualified = true;
+         document.getElementById("status").textContent = "失格（0点3回）";
+         document.getElementById("status").className = "disqualified";
+         document.getElementById("addBtn").disabled = true;
+         return;
+       } else {
+         document.getElementById("status").textContent = `0点連続 ${player.zeroCount} 回です`;
+         document.getElementById("status").className = "";
+       }
       } else {
         player.zeroCount = 0;
         player.score += addedScore;
