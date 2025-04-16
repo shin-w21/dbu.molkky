@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>モルック得点計算（1人用）</title>
+  <title>モルック得点計算</title>
   <style>
     body {
       font-family: sans-serif;
@@ -93,13 +93,13 @@
 </head>
 <body>
 
-  <h1>モルック得点計算（1人用）</h1>
+  <h1>モルック得点計算</h1>
 
   <div class="player-box">
-    <input type="text" id="name" value="プレイヤー1" onchange="updateName()" placeholder="名前を入力"><br>
+    <input type="text" id="name" value="プレイヤー1" onchange="updateName()" placeholder="名前（チーム名）を入力"><br>
     <div class="score-box" id="score">0 点</div>
     <p id="status"></p>
-    <input type="tel" id="input" placeholder="倒したピン数を入力（例: 1）"><br>
+    <input type="tel" id="input" placeholder="半角数字を入力してください"><br>
     <button onclick="addScore()" id="addBtn">得点追加</button>
     <button onclick="undoScore()" class="undo">戻る</button>
     <p>個人ターン数: <span id="player-turn">0</span></p>
@@ -162,7 +162,7 @@
         player.zeroCount++;
         if (player.zeroCount >= 3) {
           player.disqualified = true;
-          document.getElementById("status").textContent = "失格（0点3回）";
+          document.getElementById("status").textContent = "何で負けたか明日までに考えておいてください";
           document.getElementById("status").className = "disqualified";
           document.getElementById("addBtn").disabled = true;
         } else {
