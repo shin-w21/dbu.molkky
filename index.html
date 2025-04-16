@@ -162,7 +162,7 @@
         player.zeroCount++;
         if (player.zeroCount >= 3) {
           player.disqualified = true;
-          document.getElementById("status").textContent = "何で負けたか明日までに考えておいてください";
+          document.getElementById("status").textContent = "失格（0点3回）";
           document.getElementById("status").className = "disqualified";
           document.getElementById("addBtn").disabled = true;
         } else {
@@ -211,7 +211,7 @@
 
       // ステータス復元
       if (player.disqualified) {
-        document.getElementById("status").textContent = "失格（0点3回）";
+        document.getElementById("status").textContent = "何で負けたのか明日までに考えておいてください";
         document.getElementById("status").className = "disqualified";
       } else if (player.score === 50) {
         document.getElementById("status").textContent = "あなたの勝ちです！";
