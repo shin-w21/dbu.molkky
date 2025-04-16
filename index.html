@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>モルック得点計算</title>
   <style>
     body {
@@ -67,7 +67,7 @@
     }
 
     .reset {
-      background-color: #f44336;
+      background-color: #f44336 !important;
       color: white;
     }
 
@@ -100,17 +100,20 @@
     <div class="score-box" id="score">0 点</div>
     <p id="status"></p>
     <input type="tel" id="input" placeholder="半角数字を入力してください"><br>
-    <button onclick="addScore()" id="addBtn">得点追加</button>
+
+    <!-- ボタン順序修正済み -->
     <button onclick="undoScore()" class="undo">戻る</button>
+    <button onclick="addScore()" id="addBtn">得点追加</button>
+
     <p>個人ターン数: <span id="player-turn">0</span></p>
   </div>
 
   <button onclick="resetGame()" class="reset">リセット</button>
 
-  <!-- 音声ファイル再生用 -->
+  <!-- 音声ファイル -->
   <audio id="zeroSound" src="zero.mp3" preload="auto"></audio>
 
-  <footer>©︎モルックサークル「möln」</footer>
+  <footer>モルックサークル「möln」　</footer>
 
   <script>
     let player = {
@@ -154,7 +157,7 @@
       document.getElementById("player-turn").textContent = player.turn;
 
       if (scoreInput === 0) {
-        // 音を再生
+        // 音再生
         const zeroSound = document.getElementById("zeroSound");
         zeroSound.currentTime = 0;
         zeroSound.play();
@@ -162,7 +165,7 @@
         player.zeroCount++;
         if (player.zeroCount >= 3) {
           player.disqualified = true;
-          document.getElementById("status").textContent = "失格（0点3回）";
+          document.getElementById("status").textContent = "何で負けたか明日までに考えておいてください";
           document.getElementById("status").className = "disqualified";
           document.getElementById("addBtn").disabled = true;
         } else {
@@ -209,9 +212,9 @@
       document.getElementById("addBtn").disabled = false;
       document.getElementById("score").classList.remove("score-red");
 
-      // ステータス復元
+      // 状態復元
       if (player.disqualified) {
-        document.getElementById("status").textContent = "何で負けたのか明日までに考えておいてください";
+        document.getElementById("status").textContent = "何で負けたか明日までに考えておいてください";
         document.getElementById("status").className = "disqualified";
       } else if (player.score === 50) {
         document.getElementById("status").textContent = "あなたの勝ちです！";
@@ -243,6 +246,5 @@
       document.getElementById("score").classList.remove("score-red");
     }
   </script>
-
 </body>
 </html>
