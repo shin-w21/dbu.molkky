@@ -14,8 +14,7 @@
     }
 
     input[type="text"],
-    input[type="tel"],
-    input[type="number"] {
+    input[type="tel"] {
       width: 95%;
       padding: 18px;
       font-size: 20px;
@@ -71,6 +70,12 @@
       color: white;
     }
 
+    .disabled-btn {
+      background-color: #ccc !important;
+      color: #666 !important;
+      cursor: not-allowed;
+    }
+
     .disqualified {
       color: red;
       font-weight: bold;
@@ -81,7 +86,14 @@
       font-weight: bold;
     }
 
-    
+    footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.9em;
+      color: #555;
+    }
   </style>
 </head>
 <body>
@@ -92,9 +104,9 @@
     <input type="text" id="name" value="プレイヤー1" onchange="updateName()" placeholder="名前（チーム名）を入力"><br>
     <div class="score-box" id="score">0 点</div>
     <p id="status"></p>
-    <input type="tel" id="input" placeholder="半角数字を入力してください"><br>
+    <input type="tel" id="input" placeholder="倒したピン数を入力（例: 1）"><br>
 
-    <!-- ボタン順序修正済み -->
+    <!-- ボタン順序：戻る → 得点追加 -->
     <button onclick="undoScore()" class="undo">戻る</button>
     <button onclick="addScore()" id="addBtn">得点追加</button>
 
@@ -106,7 +118,7 @@
   <!-- 音声ファイル -->
   <audio id="zeroSound" src="zero.mp3" preload="auto"></audio>
 
-  
+  <footer>モルックサークル「möln」　</footer>
 
   <script>
     let player = {
@@ -138,7 +150,7 @@
         return;
       }
 
-      // 履歴を記録
+      // 履歴保存
       history.push({
         score: player.score,
         turn: player.turn,
@@ -150,17 +162,15 @@
       document.getElementById("player-turn").textContent = player.turn;
 
       if (scoreInput === 0) {
-        // 音再生
-        const zeroSound = document.getElementById("zeroSound");
-        zeroSound.currentTime = 0;
-        zeroSound.play();
+        document.getElementById("zeroSound").currentTime = 0;
+        document.getElementById("zeroSound").play();
 
         player.zeroCount++;
         if (player.zeroCount >= 3) {
           player.disqualified = true;
-          document.getElementById("status").textContent = "何で負けたか明日までに考えておいてください";
+          document.getElementById("status").textContent = "何で失格なのか明日までに考えておいてください";
           document.getElementById("status").className = "disqualified";
-          document.getElementById("addBtn").disabled = true;
+          disableAddButton();
         } else {
           document.getElementById("status").textContent = `0点連続 ${player.zeroCount} 回です`;
           document.getElementById("status").className = "";
@@ -176,8 +186,8 @@
         if (player.score === 50) {
           document.getElementById("status").textContent = "あなたの勝ちです！";
           document.getElementById("status").className = "winner";
-          document.getElementById("addBtn").disabled = true;
           document.getElementById("score").classList.add("score-red");
+          disableAddButton();
         } else {
           document.getElementById("status").textContent = "";
           document.getElementById("status").className = "";
@@ -185,6 +195,18 @@
       }
 
       document.getElementById("score").textContent = `${player.score} 点`;
+    }
+
+    function disableAddButton() {
+      const addBtn = document.getElementById("addBtn");
+      addBtn.disabled = true;
+      addBtn.classList.add("disabled-btn");
+    }
+
+    function enableAddButton() {
+      const addBtn = document.getElementById("addBtn");
+      addBtn.disabled = false;
+      addBtn.classList.remove("disabled-btn");
     }
 
     function undoScore() {
@@ -202,18 +224,17 @@
       document.getElementById("score").textContent = `${player.score} 点`;
       document.getElementById("player-turn").textContent = player.turn;
       document.getElementById("input").value = "";
-      document.getElementById("addBtn").disabled = false;
+      enableAddButton();
       document.getElementById("score").classList.remove("score-red");
 
-      // 状態復元
+      // 状態表示復元
       if (player.disqualified) {
-        document.getElementById("status").textContent = "何で負けたか明日までに考えておいてください";
+        document.getElementById("status").textContent = "何で失格なのか明日までに考えておいてください";
         document.getElementById("status").className = "disqualified";
       } else if (player.score === 50) {
         document.getElementById("status").textContent = "あなたの勝ちです！";
         document.getElementById("status").className = "winner";
         document.getElementById("score").classList.add("score-red");
-        document.getElementById("addBtn").disabled = true;
       } else if (player.zeroCount > 0) {
         document.getElementById("status").textContent = `0点連続 ${player.zeroCount} 回です`;
         document.getElementById("status").className = "";
@@ -235,8 +256,8 @@
       document.getElementById("status").textContent = "";
       document.getElementById("status").className = "";
       document.getElementById("input").value = "";
-      document.getElementById("addBtn").disabled = false;
       document.getElementById("score").classList.remove("score-red");
+      enableAddButton();
     }
   </script>
 </body>
