@@ -2,74 +2,85 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>モルック得点計算</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>モルック得点計算（1人用）</title>
   <style>
     body {
       font-family: sans-serif;
       text-align: center;
       padding: 20px;
-      padding-bottom: 80px;
-      margin: 0;
       background-color: #f0f0f0;
+      margin: 0;
     }
-    input[type="text"], input[type="number"] {
-      width: 90%;
-      padding: 10px;
-      margin-bottom: 10px;
-      font-size: 16px;
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="number"] {
+      width: 95%;
+      padding: 18px;
+      font-size: 20px;
+      margin-bottom: 15px;
       box-sizing: border-box;
     }
+
     .player-box {
       border: 2px solid #333;
       padding: 20px;
       border-radius: 10px;
       background-color: #fff;
       max-width: 400px;
-      width: 100%;
-      margin: 0 auto;
+      margin: 0 auto 20px;
       box-sizing: border-box;
     }
+
     .score-box {
       border: 3px solid #333;
-      padding: 10px;
-      font-size: 1.5em;
+      padding: 15px;
+      font-size: 1.8em;
       margin: 15px 0;
       background-color: #e0e0e0;
       border-radius: 10px;
       font-weight: bold;
     }
+
     .score-red {
       color: red;
     }
+
     button {
-      margin: 10px;
+      margin: 10px 5px;
       padding: 12px 20px;
       font-size: 16px;
-      background-color: #4CAF50;
-      color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
     }
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
+
+    #addBtn {
+      background-color: #4CAF50;
+      color: white;
     }
+
     .undo {
       background-color: #888888;
-　　　}
-    .next-button{
-      background-color: blue;
+      color: white;
     }
+
+    .reset {
+      background-color: #f44336;
+      color: white;
+    }
+
     .disqualified {
       color: red;
       font-weight: bold;
     }
+
     .winner {
       color: green;
       font-weight: bold;
     }
+
     footer {
       position: fixed;
       bottom: 10px;
@@ -78,33 +89,28 @@
       font-size: 0.9em;
       color: #555;
     }
-    input[type="tel"] {
-      width: 95%;
-      padding: 12px;
-      font-size: 16px;
-      margin-bottom: 10px;
-      box-sizing: border-box;
-　　　}
   </style>
 </head>
 <body>
 
-  <h1>モルック得点計算</h1>
+  <h1>モルック得点計算（1人用）</h1>
 
   <div class="player-box">
-    <input type="text" id="name" value="プレイヤー1" onchange="updateName()" placeholder="プレイヤー(チーム)名を入力"><br>
+    <input type="text" id="name" value="プレイヤー1" onchange="updateName()" placeholder="名前を入力"><br>
     <div class="score-box" id="score">0 点</div>
     <p id="status"></p>
-    <input type="tel" id="input" placeholder="半角数字を入力してください"><br>
-    <button onclick="undoScore()" class="undo">戻る</button>
+    <input type="tel" id="input" placeholder="倒したピン数を入力（例: 1）"><br>
     <button onclick="addScore()" id="addBtn">得点追加</button>
+    <button onclick="undoScore()" class="undo">戻る</button>
     <p>個人ターン数: <span id="player-turn">0</span></p>
-    
   </div>
 
-  <button onclick="resetGame()" class="next-button">次のゲームへ</button>
+  <button onclick="resetGame()" class="reset">リセット</button>
 
-  <footer>モルックサークル「möln」　</footer>
+  <!-- 音声ファイル再生用 -->
+  <audio id="zeroSound" src="zero.mp3" preload="auto"></audio>
+
+  <footer>©︎モルックサークル「möln」</footer>
 
   <script>
     let player = {
@@ -115,7 +121,7 @@
       disqualified: false
     };
 
-    let scoreHistory = []; // 得点履歴を保存
+    let history = [];
 
     function updateName() {
       player.name = document.getElementById("name").value;
@@ -136,19 +142,27 @@
         return;
       }
 
-      let addedScore = scoreInput;
-
-      // 得点を履歴に保存
-      scoreHistory.push(player.score);
+      // 履歴を記録
+      history.push({
+        score: player.score,
+        turn: player.turn,
+        zeroCount: player.zeroCount,
+        disqualified: player.disqualified
+      });
 
       player.turn++;
       document.getElementById("player-turn").textContent = player.turn;
 
-      if (addedScore === 0) {
+      if (scoreInput === 0) {
+        // 音を再生
+        const zeroSound = document.getElementById("zeroSound");
+        zeroSound.currentTime = 0;
+        zeroSound.play();
+
         player.zeroCount++;
         if (player.zeroCount >= 3) {
           player.disqualified = true;
-          document.getElementById("status").textContent = "なんで失格になったか明日までに考えといてください";
+          document.getElementById("status").textContent = "失格（0点3回）";
           document.getElementById("status").className = "disqualified";
           document.getElementById("addBtn").disabled = true;
         } else {
@@ -157,39 +171,57 @@
         }
       } else {
         player.zeroCount = 0;
-        player.score += addedScore;
+        player.score += scoreInput;
 
-        // スコアがオーバーした場合
         if (player.score > 50) {
           player.score = 25;
         }
 
-        // 勝利判定
         if (player.score === 50) {
-          document.getElementById("status").textContent = "何で勝ったのか明日までに考えておいてください";
+          document.getElementById("status").textContent = "あなたの勝ちです！";
           document.getElementById("status").className = "winner";
           document.getElementById("addBtn").disabled = true;
           document.getElementById("score").classList.add("score-red");
         } else {
-          // 通常時ステータス表示リセット
           document.getElementById("status").textContent = "";
           document.getElementById("status").className = "";
         }
       }
 
-      // スコア更新
       document.getElementById("score").textContent = `${player.score} 点`;
     }
 
     function undoScore() {
-      // 履歴が空でなければ前の得点に戻す
-      if (scoreHistory.length > 0) {
-        player.score = scoreHistory.pop(); // 最後の得点を取り出して元に戻す
-        player.turn--; // ターン数を1回戻す
-        document.getElementById("player-turn").textContent = player.turn;
-        document.getElementById("score").textContent = `${player.score} 点`;
+      if (history.length === 0) {
+        alert("戻す履歴がありません。");
+        return;
+      }
 
-        // 状態をリセット（得点が50点を超えた場合の表示もリセット）
+      const lastState = history.pop();
+      player.score = lastState.score;
+      player.turn = lastState.turn;
+      player.zeroCount = lastState.zeroCount;
+      player.disqualified = lastState.disqualified;
+
+      document.getElementById("score").textContent = `${player.score} 点`;
+      document.getElementById("player-turn").textContent = player.turn;
+      document.getElementById("input").value = "";
+      document.getElementById("addBtn").disabled = false;
+      document.getElementById("score").classList.remove("score-red");
+
+      // ステータス復元
+      if (player.disqualified) {
+        document.getElementById("status").textContent = "失格（0点3回）";
+        document.getElementById("status").className = "disqualified";
+      } else if (player.score === 50) {
+        document.getElementById("status").textContent = "あなたの勝ちです！";
+        document.getElementById("status").className = "winner";
+        document.getElementById("score").classList.add("score-red");
+        document.getElementById("addBtn").disabled = true;
+      } else if (player.zeroCount > 0) {
+        document.getElementById("status").textContent = `0点連続 ${player.zeroCount} 回です`;
+        document.getElementById("status").className = "";
+      } else {
         document.getElementById("status").textContent = "";
         document.getElementById("status").className = "";
       }
@@ -200,7 +232,7 @@
       player.turn = 0;
       player.zeroCount = 0;
       player.disqualified = false;
-      scoreHistory = []; // 履歴をリセット
+      history = [];
 
       document.getElementById("score").textContent = "0 点";
       document.getElementById("player-turn").textContent = "0";
