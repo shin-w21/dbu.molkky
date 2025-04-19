@@ -1,37 +1,184 @@
 <!DOCTYPE html>
- <html lang="ja">
-  <head>
-   <meta charset="UTF-8">
-   <title>モルック得点計算</title>
-   <style>
-    
-    .title{
-       font-size: 60px;
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>モルックサークル「möln」</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8f8f8;
+      color: #333;
+    }
+
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .container {
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    section {
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      color: #2e7d32;
+    }
+
+    .gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    @media (min-width: 768px) {
+      .gallery {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .gallery img {
+        max-width: 32%;
+      }
+    }
+
+    .score-link {
+      display: inline-block;
+      background-color: #4CAF50; /* ヘッダーと同じ色 */
+      color: white;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.95rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .score-link:hover {
+      background-color: #388E3C; /* ホバー時に少し濃い緑 */
     }
 
     footer {
-      position: fixed;
-      bottom: 10px;
-      width: 100%;
+      background-color: #4CAF50;
+      color: white;
       text-align: center;
-      font-size: 1.8em;
-      color: #555;
+      padding: 1rem;
+      margin-top: 2rem;
     }
 
-   </style>
+    a {
+      color: #2e7d32;
+      text-decoration: none;
+    }
 
-  </head>
-   
+    a:hover {
+      text-decoration: underline;
+    }
 
-  <body>
+  </style>
+</head>
+<body>
 
-   <p class="title">現在メンテナンス中です。</p>
-   <p>　</p>
-   <p>　</p>
-   <p>メンテナンス終了までもう少しお待ちください。</p>
+  <header>
+    <h1>モルックサークル「möln」</h1>
+    <p>投げて笑って、mölnしよう。</p>
+  </header>
 
-   <footer>モルックサークル「möln」　</footer>
+  <div class="container">
 
-  </body>
+    <section id="about">
+      <h2>◯サークル紹介</h2>
+      <p>
+        モルックサークル「möln」では、フィンランドのスポーツ「モルック」を行っています。
+        部員全員の仲が良く、常に和気あいあいとしているのも魅力の1つです。「運動はしたいけど激しいのは苦手だな…」そんな人にこそピッタリ！一緒にモルックを楽しみましょう！
+      </p>
+    </section>
 
+
+    <p>　</p>
+
+
+    <section id="schedule">
+      <h2>◯活動日時・場所</h2>
+      <ul>
+        <li>部員の予定が合う日程</li>
+        <li>板橋キャンパスや高坂駅から徒歩7分の中通公園</li>
+      </ul>
+    </section>
+
+
+    <p>　</p>
+
+
+    <section id="gallery">
+      <h2>◯写真ギャラリー</h2>
+      <div class="gallery">
+        <img src="./Other/IMG_0001.jpeg" alt="photo01" />
+        <img src="./Other/IMG_0002.jpeg" alt="photo02" />
+        <img src="./Other/IMG_0003.jpeg" alt="photo_icon" />
+      </div>
+    </section>
+
+
+    <p>　</p>
+
+
+    <section id="score">
+      <h2>◯モルック得点計算</h2>
+       <p>モルックの練習中に便利な得点計算ツールはこちらからアクセスできます。</p>
+       <div style="text-align: right;">
+        <a class="score-link" href="./Other/plus.html" target="_blank">得点計算ページへ</a>
+       </div>
+    </section>
+
+
+    <p>　</p>
+
+
+    <section id="contact">
+      <h2>◯お問い合わせ・SNS</h2>
+      <p>ご質問・参加希望などは以下のSNSよりご連絡ください。</p>
+      <ul>
+        <li><a href="https://instagram.com/dbu_molkky" target="_blank">公式Instagramはこちら！</a></li>
+        <li><a href="https://twitter.com/dbu_molkky" target="_blank">公式Xはこちら</a></li>
+        <li><a href="https://line.me/R/ti/p/@413roggq" target="_blank">公式LINEはこちら！</a></li>
+      </ul>
+    </section>
+
+
+    <p>　</p>
+
+
+    <section id="contact">
+      <h2>◯その他リンク</h2>
+      <p>このサークルに関連するその他のリンクはこちらです。</p>
+      <ul>
+        <li><a href="https://www.daito.ac.jp" target="_blank">大東文化大学ホームページ</a></li>
+        <li><a href="https://www.daito.ac.jp/campuslife/club/culture/details_43238.html" target="_blank">大学ホームページでのサークル紹介ページ</a></li>
+      </ul>
+    </section>
+
+
+  </div>
+
+  <footer>
+    <p>&copy; 大東文化大学公認サークル<br> モルックサークル「möln」</p>
+  </footer>
+
+</body>
 </html>
